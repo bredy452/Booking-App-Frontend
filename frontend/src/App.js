@@ -10,22 +10,31 @@ export default class App extends Component{
   constructor(props){
     super(props)
     this.state = {
-      title: 'Unavailable',
-      date: '2021-05-22'
+      title: '',
+      date: [],
+      info: []
     }
   }
+
+  handleDateClick = (e) => {
+    alert(e.dateStr)
+    const copyState = [...this.state.date]
+    copyState.push(e.dateStr)
+    this.setState({
+      date: copyState
+    })
+  }
+
   render() {
-    // console.log(props)
+    console.log(FullCalendar.events)
+    const events = [{title: 'unavailable', date: '2021-05-21'}]
+
     return (
       <FullCalendar 
       plugins={[dayGridPlugin, InteractionPlugin]} 
       intialView='dayGridMonth' 
-      events={[
-        {title: this.state.title, date: this.state.date},
-        {title: this.state.title, date: '2021-05-20'}
-
-        ]}
-      dateClick={this.handleDateClick}/>
+      events={events}
+      dateClick={(e)=> this.handleDateClick(e)}/>
 
     )
 
@@ -38,8 +47,5 @@ export default class App extends Component{
     //   )
   }
 
-  handleDateClick = (arg) => {
-    alert(this.title)
-  }
-
 }
+
