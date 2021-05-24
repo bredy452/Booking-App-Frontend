@@ -11,6 +11,8 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "fomantic-ui-css": "^2.8.7",
+    "lodash": "^4.17.21",
+    "lodash.invert": "^4.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
