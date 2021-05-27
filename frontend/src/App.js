@@ -4,6 +4,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import InteractionPlugin from '@fullcalendar/interaction' 
 import Login from './Components/Login'
+import Homepage from './Components/Homepage'
 // import invert from 'lodash.invert'
 let baseUrl = ''
 
@@ -21,29 +22,48 @@ export default class App extends Component{
       date: [],
       availability: [],
       isLogin: false,
-      current_user: ''
+      org_user: false,
+      client_user: false,
+      current_user: '',
+      login_button: true
     }
+  }
+
+  org_Login = (e) => {
+    e.preventDefault();
+    this.setState({
+      org_user:!this.state.org_user
+    })
+  }
+
+  client_Login = (e) => {
+    this.setState({
+      client_user:!this.state.client_user
+    })
   }
 
   checkLogin = (status, user) => {
     if (status === 200) {
       this.setState({
         current_user: user,
-        isLogin: !this.state.isLogin
+        isLogin: !this.state.isLogin,
+        login_button: !this.state.login_button
       })
       console.log(status)
     }
   }
 
   handleDateClick = (e) => {
-    
+    console.log(e.jsEvent)
     const dupState = {}
     dupState.date = e.dateStr
     const copyState = [...this.state.availability]
     copyState.push(dupState)
 
     copyState.forEach((data) => {
-      data.title = 'unavailable'
+      // data.title = 'unavailable'
+      data.display = 'background'
+      data.color = '#FF000D'
       
 
     })
@@ -101,7 +121,8 @@ export default class App extends Component{
   }
 
   render() {
-
+    console.log(this.state.org_user)
+    console.log(this.state.client_user)
     const data = this.state.availability
     // let separate = []
     // let join = []
@@ -131,26 +152,27 @@ export default class App extends Component{
 
     return (
       <>
+      {((this.state.org_user || this.state.client_user) && this.state.login_button) && <Login state={this.state} baseUrl={baseUrl} checkLogin={this.checkLogin}/>} 
+
+      {(!this.state.org_user && !this.state.client_user) && <Homepage org_Login={this.org_Login} client_Login={this.client_Login}/>}
+
+
       
-      {this.state.isLogin ? 
+      {this.state.isLogin && this.state.org_user && 
 
       <FullCalendar 
       plugins={[dayGridPlugin, InteractionPlugin]} 
       intialView='dayGridMonth' 
       events={data}
-      dateClick={(e)=> this.handleDateClick(e)}/> : 
+      selectable='true'
+      dateClick={(e)=> this.handleDateClick(e)}/>}
 
-      <Login baseUrl={baseUrl} checkLogin={this.checkLogin}/>
+      {this.state.isLogin && this.state.org_user && 
+      <button onClick={(e)=>{this.undoEntry(e)}}>Undo</button>
       }
-
-      {this.state.isLogin? 
-      <button onClick={(e)=>{this.undoEntry(e)}}>Undo</button> : null
+      {this.state.isLogin && this.state.org_user &&
+      <button onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</button>
       }
-      {this.state.isLogin ?
-      <button onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</button> :
-      null
-      }
-      
       </>
 
     )

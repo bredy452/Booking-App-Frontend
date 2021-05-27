@@ -1,5 +1,8 @@
 import React, {Component} from 'react'
 import {Button, Form, Grid, Header, Segment} from 'semantic-ui-react'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import InteractionPlugin from '@fullcalendar/interaction'
 
 export default class Login extends Component {
 	constructor(props) {
@@ -18,24 +21,45 @@ export default class Login extends Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault()
+		if (this.props.state.org_user) {
 
-		fetch(this.props.baseUrl + '/users/org_user/login', {
-			method: 'POST',
-			body: JSON.stringify({
-				username: this.state.username,
-				password: this.state.password
-			}),
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		}).then (res => {
-			return res.json()
-		}).then (data => {
+			fetch(this.props.baseUrl + '/users/org_user/login', {
+				method: 'POST',
+				body: JSON.stringify({
+					username: this.state.username,
+					password: this.state.password
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include'
+			}).then (res => {
+				return res.json()
+			}).then (data => {
 
-			console.log(data)
-			this.props.checkLogin(data.status, data.data)
-		}).catch(error => console.error)
+				console.log(data)
+				this.props.checkLogin(data.status, data.data)
+			}).catch(error => console.error)
+		} else if (this.props.state.client_user) {
+
+			fetch(this.props.baseUrl + '/users/client/login', {
+				method: 'POST',
+				body: JSON.stringify({
+					username: this.state.username,
+					password: this.state.password
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include'
+			}).then (res => {
+				return res.json()
+			}).then (data => {
+
+				console.log(data)
+				this.props.checkLogin(data.status, data.data)
+			}).catch(error => console.error)
+		}
 	}
 
 	render() {
