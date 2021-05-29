@@ -5,6 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import InteractionPlugin from '@fullcalendar/interaction' 
 import Login from './Components/Login'
 import Homepage from './Components/Homepage'
+import ClientPage from './Components/ClientPage'
 // import invert from 'lodash.invert'
 let baseUrl = ''
 
@@ -25,7 +26,9 @@ export default class App extends Component{
       org_user: false,
       client_user: false,
       current_user: '',
-      login_button: true
+      login_button: true,
+      client_page: false,
+      old_availability: []
     }
   }
 
@@ -97,12 +100,12 @@ export default class App extends Component{
     this.state.availability.forEach(item => {
       separateFromObject.push(Object.entries(item))
     })
-    
+    console.log(separateFromObject)
     separateFromObject.forEach(data => {
       string.push(data.toString())
       together = string.join()
     })
-    console.log(together)
+
     fetch(baseUrl + '/schedules/org_user/addSchedule', {
       method: 'POST',
       body: JSON.stringify({
@@ -117,39 +120,13 @@ export default class App extends Component{
     }).then(data => {
       console.log(data)
     }).catch(error => console.error)
-    // console.log(together)
+    console.log(together)
   }
 
   render() {
     console.log(this.state.org_user)
-    console.log(this.state.client_user)
     const data = this.state.availability
-    // let separate = []
-    // let join = []
-    // let together = ''
-
-    // data.forEach(info => {
-    //   separate.push(Object.entries(info))
-
-    // })
-    // console.log(separate)
-    // separate.forEach(data => {
-    //   join.push(data.toString())
-    //   together = join.join()
-    // })
-    // console.log(together)
-
-
     
-    
-    // info.title = 'unavailable'
-    // info.date = '2021-05-27'
-    // data.push(info)
-    // info = {}
-    // console.log(info)
-    // console.log(this.state.date)
-    
-
     return (
       <>
       {((this.state.org_user || this.state.client_user) && this.state.login_button) && <Login state={this.state} baseUrl={baseUrl} checkLogin={this.checkLogin}/>} 
@@ -173,6 +150,8 @@ export default class App extends Component{
       {this.state.isLogin && this.state.org_user &&
       <button onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</button>
       }
+
+      {this.state.isLogin && this.state.client_user && <ClientPage baseUrl={baseUrl} state={this.state}/>}
       </>
 
     )
