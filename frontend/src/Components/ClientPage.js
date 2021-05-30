@@ -2,12 +2,14 @@ import React, {Component} from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import InteractionPlugin from '@fullcalendar/interaction' 
+import BookingCompanyChoice from './BookingCompanyChoice'
 
 export default class ClientPage extends Component {
 	constructor(props) {
 		super(props)
 		this.state= {
-			org_availability: []
+			org_availability: [],
+			client_schedule: []
 		}
 	}
 
@@ -17,6 +19,7 @@ export default class ClientPage extends Component {
 		.then(res => {
 			return res.json()
 		}).then(data => {
+			console.log(data.data[0].org_id.org_name)
 			let arr = []
     		arr = data.data[0].availability.split(',')
     		let newArr = []
@@ -49,20 +52,32 @@ export default class ClientPage extends Component {
 		})
 	}
 
-	componentDidMount() {
-		this.getCalender()
-	}
+	// componentDidMount() {
+	// 	this.getCalender()
+	// }
 
 	render() {
 
 		let data = this.state.org_availability
+		let clientData = this.state.client_schedule
 		
 		return(
+			<>
 			<FullCalendar 
-      plugins={[dayGridPlugin, InteractionPlugin]} 
-      intialView='dayGridMonth' 
-      events={data}
-      selectable='true'/>
+     		plugins={[dayGridPlugin, InteractionPlugin]} 
+      		intialView='dayGridMonth' 
+      		events={data}
+      		selectable='true'/>
+
+      		{/*<FullCalendar 
+     		plugins={[dayGridPlugin, InteractionPlugin]} 
+      		intialView='dayGridMonth' 
+      		events={clientData}
+      		selectable='true'/>*/}
+
+      		<BookingCompanyChoice baseUrl={this.props.baseUrl}/>
+      		</>
+
 		)
 	}
 
