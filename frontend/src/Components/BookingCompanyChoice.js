@@ -50,7 +50,7 @@ export default class BookingCompanyChoice extends Component {
     				masterArr.push(tempObj)
   			}
   			// console.log(masterArr)
-  			this.props.bookingSchedule(masterArr)
+  			this.props.bookingSchedule(masterArr, this.state.companyChoice)
   			// this.setState({
   			// 	org_availability: masterArr
   			// })

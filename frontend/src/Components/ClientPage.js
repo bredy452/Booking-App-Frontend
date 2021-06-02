@@ -1,21 +1,87 @@
 import React, {Component} from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import InteractionPlugin from '@fullcalendar/interaction' 
+import InteractionPlugin from '@fullcalendar/interaction'
 import BookingCompanyChoice from './BookingCompanyChoice'
+
 
 export default class ClientPage extends Component {
 	constructor(props) {
 		super(props)
 		this.state= {
 			org_availability: [],
-			client_schedule: []
+			client_schedule: [],
+			company_name: ''
 		}
 	}
 
-	bookingSchedule = (scheduleInfo) => {
+	addBooking = (e) => {
+		let info = prompt("Description of Booking: ")
+    	let dupeState = {}
+ 		dupeState.date = e.dateStr
+ 		dupeState.title= info
+    	const copyState1 = [...this.state.org_availability]
+    	const copyState2 = [...this.state.client_schedule]
+    	copyState1.push(dupeState)
+    	copyState2.push(dupeState)
+
+    	this.setState({
+    		org_availability: copyState1,
+    		client_schedule: copyState2
+    	}) 
+	}
+
+	submitSchedule = (e) => {
+    e.preventDefault()
+    let separateFromObject = []
+    let string = []
+    let together = ''
+
+    let separateFromObject2 = []
+    let string2 = []
+    let together2 = ''
+
+    this.state.org_availability.forEach(item => {
+      separateFromObject.push(Object.entries(item))
+    })
+    console.log(separateFromObject)
+    separateFromObject.forEach(data => {
+      string.push(data.toString())
+      together = string.join()
+    })
+
+    this.state.client_schedule.forEach(item => {
+      separateFromObject2.push(Object.entries(item))
+    })
+    console.log(separateFromObject2)
+    separateFromObject2.forEach(data => {
+      string2.push(data.toString())
+      together2 = string2.join()
+    })
+
+    fetch(this.props.baseUrl + '/schedules/client/bookDate', {
+      method: 'POST',
+      body: JSON.stringify({
+        client_availability: together2,
+        org_id: this.state.company_name
+
+
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    }).then (res =>{
+        return res.json()
+    }).then(data => {
+      console.log(data)
+    }).catch(error => console.error)
+  } 
+
+	bookingSchedule = (scheduleInfo, company) => {
 		this.setState({
-			org_availability: scheduleInfo
+			org_availability: scheduleInfo,
+			company_name: company
 		})
 		console.log(this.state.org_availability)
 // 		fetch(this.props.baseUrl + '/schedules/org_user/viewSchedule', {
@@ -62,7 +128,7 @@ export default class ClientPage extends Component {
 
 	render() {
 
-		let data = this.state.org_availability
+		let data = this.state.org_availability 
 		let clientData = this.state.client_schedule
 		
 		return(
@@ -71,7 +137,11 @@ export default class ClientPage extends Component {
      		plugins={[dayGridPlugin, InteractionPlugin]} 
       		intialView='dayGridMonth' 
       		events={data}
-      		selectable='true'/>
+      		selectable='true'
+      		dateClick={(e) => {this.addBooking(e)}}
+      		/>
+
+      		<button onClick={(e)=>{this.submitSchedule(e)}}>Book Dates</button>
 
       		{/*<FullCalendar 
      		plugins={[dayGridPlugin, InteractionPlugin]} 
@@ -80,7 +150,9 @@ export default class ClientPage extends Component {
       		selectable='true'/>*/}
 
       		<BookingCompanyChoice bookingSchedule={this.bookingSchedule} baseUrl={this.props.baseUrl}/>
+
       		</>
+
 
 		)
 	}
