@@ -6,6 +6,7 @@ import InteractionPlugin from '@fullcalendar/interaction'
 import Login from './Components/Login'
 import Homepage from './Components/Homepage'
 import ClientPage from './Components/ClientPage'
+import Bookings from './Components/Bookings'
 
 // import invert from 'lodash.invert'
 let baseUrl = ''
@@ -29,11 +30,12 @@ export default class App extends Component{
       current_user: '',
       login_button: true,
       client_page: false,
-      old_availability: []
+      old_availability: [],
+      client_info: []
     }
   }
 
-  getSchedule = (e) => {
+  getOrgSchedule = (e) => {
     fetch(baseUrl + `/schedules/${this.state.current_user.org_name}`, {
       credentials: 'include'})
     .then(res => {
@@ -55,7 +57,7 @@ export default class App extends Component{
             let tempObj ={}
 
             for(let y = 0; y < chunk.length; y++) {
-                if (y % 2 ==0){
+                if (y % 2 === 0){
                   let key = chunk[y]
                   let value = chunk[y+1]
                   tempObj[key] = value
@@ -67,7 +69,56 @@ export default class App extends Component{
         // console.log(masterArr)
         this.setState({
           availability: masterArr
+          
         })
+        
+    })
+  }
+
+  getPotentialClientSchedule = (e) => {
+    fetch(baseUrl + `/schedules/client_schedule/${this.state.current_user.org_name}`, {
+      credentials: 'include'})
+    .then(res => {
+      return res.json()
+    }).then(data => {
+
+      let arr = []
+        arr = data.data.client_availability.split(',')
+        let newArr = []
+        let masterArr = []
+        let tempObj ={}
+
+
+        for(let j = 0; j < arr.length; j += 6){
+            let bitArr = arr.slice(j, j + 6)
+            newArr.push(bitArr)
+        }
+
+        for(let x = 0; x < newArr.length; x++){
+            let chunk = newArr[x]
+            
+            for(let y = 0; y < chunk.length; y++) {
+                if (y % 2 ==0){
+                  let key = chunk[y]
+                  let value = chunk[y+1]
+                  tempObj[key] = value
+              }
+          }
+
+            // masterArr.push(tempObj)
+            // console.log(masterArr)
+        }
+
+        const copyAvailability = [...this.state.availability]
+        copyAvailability.push(tempObj)
+        // console.log(masterArr)
+        this.setState({
+          availability: copyAvailability,
+          client_info: [data.data.client_id]
+        })
+        console.log(this.state.availability)
+        console.log(this.state)
+
     })
   }
 
@@ -97,7 +148,8 @@ export default class App extends Component{
     }
 
     if (this.state.org_user) {
-      this.getSchedule()
+      this.getOrgSchedule()
+      this.getPotentialClientSchedule()
     }
   }
 
@@ -198,6 +250,7 @@ export default class App extends Component{
       }
 
       {this.state.isLogin && this.state.client_user && <ClientPage baseUrl={baseUrl} state={this.state}/>}
+      {this.state.isLogin && this.state.org_user && <Bookings clients={this.state.client_info}/>}
       </>
 
     )

@@ -7,7 +7,8 @@ export default class BookingCompanyChoice extends Component {
 		super(props)
 		this.state={
 			companies: [],
-			companyChoice: []
+			companyChoice: [],
+			bookedDates: []
 		}
 	}
 
@@ -18,7 +19,53 @@ export default class BookingCompanyChoice extends Component {
 		})
 	}
 
+	getBookedDates = (e) => {
+    fetch(this.props.baseUrl + `/schedules/client_schedule/${this.state.companyChoice}`, {
+      credentials: 'include'})
+    .then(res => {
+      return res.json()
+    }).then(data => {
+
+      let arr = []
+        arr = data.data.client_availability.split(',')
+        let newArr = []
+        let masterArr = []
+        let tempObj ={}
+
+
+        for(let j = 0; j < arr.length; j += 6){
+            let bitArr = arr.slice(j, j + 6)
+            newArr.push(bitArr)
+        }
+
+        for(let x = 0; x < newArr.length; x++){
+            let chunk = newArr[x]
+            
+            for(let y = 0; y < chunk.length; y++) {
+                if (y % 2 ==0){
+                  let key = chunk[y]
+                  let value = chunk[y+1]
+                  tempObj[key] = value
+              }
+          }
+
+            // masterArr.push(tempObj)
+            // console.log(masterArr)
+        }
+
+        const copybookedDates = [...this.state.bookedDates]
+        copybookedDates.push(tempObj)
+        // console.log(masterArr)
+        this.setState({
+          bookedDates: copybookedDates
+        })
+        console.log(this.state.bookedDates)
+
+    })
+  }
+
 	getSchedule = (e) => {
+		this.getBookedDates()
 		fetch(this.props.baseUrl + `/schedules/${this.state.companyChoice}`, {
 			credentials: 'include'})
 		.then(res => {
@@ -48,14 +95,22 @@ export default class BookingCompanyChoice extends Component {
     			}
 
     				masterArr.push(tempObj)
+    				
   			}
-  			// console.log(masterArr)
+  			
+  			this.state.bookedDates.forEach(item => {
+  				masterArr.push(item)
+  			})
+  			// masterArr.push(this.state.bookedDates)
+  			console.log(masterArr)
   			this.props.bookingSchedule(masterArr, this.state.companyChoice)
   			// this.setState({
   			// 	org_availability: masterArr
   			// })
 		})
 	}
+
+
 
 
 	getCompanies = () => {
