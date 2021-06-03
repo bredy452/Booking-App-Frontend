@@ -33,6 +33,44 @@ export default class App extends Component{
     }
   }
 
+  getSchedule = (e) => {
+    fetch(baseUrl + `/schedules/${this.state.current_user.org_name}`, {
+      credentials: 'include'})
+    .then(res => {
+      return res.json()
+    }).then(data => {
+
+      let arr = []
+        arr = data.data.availability.split(',')
+        let newArr = []
+        let masterArr = []
+
+        for(let j = 0; j < arr.length; j += 6){
+            let bitArr = arr.slice(j, j + 6)
+            newArr.push(bitArr)
+        }
+
+        for(let x = 0; x < newArr.length; x++){
+            let chunk = newArr[x]
+            let tempObj ={}
+
+            for(let y = 0; y < chunk.length; y++) {
+                if (y % 2 ==0){
+                  let key = chunk[y]
+                  let value = chunk[y+1]
+                  tempObj[key] = value
+              }
+          }
+
+            masterArr.push(tempObj)
+        }
+        // console.log(masterArr)
+        this.setState({
+          availability: masterArr
+        })
+    })
+  }
+
   org_Login = (e) => {
     e.preventDefault();
     this.setState({
@@ -53,7 +91,13 @@ export default class App extends Component{
         isLogin: !this.state.isLogin,
         login_button: !this.state.login_button
       })
+
       console.log(status)
+      console.log(this.state.current_user.org_name)
+    }
+
+    if (this.state.org_user) {
+      this.getSchedule()
     }
   }
 
@@ -123,6 +167,7 @@ export default class App extends Component{
     }).catch(error => console.error)
     console.log(together)
   }
+
 
   render() {
     console.log(this.state.org_user)

@@ -58,6 +58,8 @@ export default class ClientPage extends Component {
       string2.push(data.toString())
       together2 = string2.join()
     })
+    console.log(together2)
+    console.log(this.state.company_name)
 
     fetch(this.props.baseUrl + '/schedules/client/bookDate', {
       method: 'POST',
