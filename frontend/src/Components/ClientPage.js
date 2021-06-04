@@ -11,7 +11,8 @@ export default class ClientPage extends Component {
 		this.state= {
 			org_availability: [],
 			client_schedule: [],
-			company_name: ''
+			company_name: '',
+      noSchedule: false
 		}
 	}
 
@@ -49,7 +50,7 @@ export default class ClientPage extends Component {
       string.push(data.toString())
       together = string.join()
     })
-
+    
     this.state.client_schedule.forEach(item => {
       separateFromObject2.push(Object.entries(item))
     })
@@ -85,7 +86,7 @@ export default class ClientPage extends Component {
 			org_availability: scheduleInfo,
 			company_name: company
 		})
-		console.log(this.state.org_availability)
+		console.log(this.state.companyChoice)
 // 		fetch(this.props.baseUrl + '/schedules/org_user/viewSchedule', {
 // 			credentials: 'include'})
 // 		.then(res => {
@@ -124,6 +125,12 @@ export default class ClientPage extends Component {
 // 		})
  	}
 
+  noSchedule = (e) => {
+    this.setState({
+      noSchedule: e
+    })
+  }
+
 	// componentDidMount() {
 	// 	this.getCalender()
 	// }
@@ -132,26 +139,27 @@ export default class ClientPage extends Component {
 
 		let data = this.state.org_availability 
 		let clientData = this.state.client_schedule
+    console.log(this.state.noSchedule)
 		
 		return(
 			<>
-			<FullCalendar 
+			{!this.state.noSchedule && <FullCalendar 
      		plugins={[dayGridPlugin, InteractionPlugin]} 
       		intialView='dayGridMonth' 
       		events={data}
       		selectable='true'
       		dateClick={(e) => {this.addBooking(e)}}
-      		/>
+      		/>}
 
-      		<button onClick={(e)=>{this.submitSchedule(e)}}>Book Dates</button>
+      		{!this.state.noSchedule && <button onClick={(e)=>{this.submitSchedule(e)}}>Book Dates</button>}
 
-      		{/*<FullCalendar 
-     		plugins={[dayGridPlugin, InteractionPlugin]} 
-      		intialView='dayGridMonth' 
-      		events={clientData}
-      		selectable='true'/>*/}
 
-      		<BookingCompanyChoice bookingSchedule={this.bookingSchedule} baseUrl={this.props.baseUrl}/>
+          {this.state.noSchedule && <FullCalendar 
+        plugins={[dayGridPlugin, InteractionPlugin]} 
+          intialView='dayGridMonth' 
+          />}
+
+      		<BookingCompanyChoice noSchedule={this.noSchedule} bookingSchedule={this.bookingSchedule} baseUrl={this.props.baseUrl}/>
 
       		</>
 
