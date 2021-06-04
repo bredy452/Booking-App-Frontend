@@ -29,6 +29,9 @@ export default class BookingCompanyChoice extends Component {
       return res.json()
     }).then(data => {
 
+    	if (data.message === "Schedule does not exist") {
+    		return
+    	} else {
       let arr = []
         arr = data.data.client_availability.split(',')
         console.log(arr)
@@ -64,6 +67,7 @@ export default class BookingCompanyChoice extends Component {
           bookedDates: copybookedDates
         })
         console.log(this.state.bookedDates)
+      }
 
     })
   }

@@ -1,15 +1,19 @@
 import React, {Component} from 'react'
-import {Button, Form, Grid, Header, Segment} from 'semantic-ui-react'
+import {Button, Form, Grid, Header, Segment, Label} from 'semantic-ui-react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import InteractionPlugin from '@fullcalendar/interaction'
+import Org_userRegister from './Org_userRegister'
+import ClientRegister from './Org_userRegister'
 
 export default class Login extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			username: '',
-			password:''
+			password:'',
+			clientRegister: false,
+			org_userRegister: false
 		}
 	}
 
@@ -63,7 +67,9 @@ export default class Login extends Component {
 	}
 
 	render() {
-		console.log(this.state)
+		console.log(this.state.clientRegister)
+		console.log(this.state.org_userRegister)
+
 		return(
 			<>
 			<Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
@@ -88,11 +94,37 @@ export default class Login extends Component {
           					</Button>
         				</Segment>
       				</Form>
-     				{/*<Button onClick={(e) => this.props.openRegistration(e)}>
-         				Sign Up
-     		 		</Button>*/}
+     				{this.props.state.org_user && this.props.state.login_button && 
+     					<Button as='div' labelPosition='right'>
+      						<Button color='blue' onClick={(e) => {
+      						this.setState({org_userRegister: !this.state.org_userRegister})}}
+      						>
+        						Register
+      						</Button>
+      					<Label as='a' basic color='red' pointing='left'>
+        					Organization
+      					</Label>
+    					</Button>}
+
+    			{this.props.state.client_user && this.props.state.login_button && 
+    				<Button as='div' labelPosition='right'>
+      					<Button color='blue' onClick={(e) => {
+      						this.setState({clientRegister: !this.state.clientRegister})}}
+      					>
+        					Register
+      					</Button>
+      				<Label as='a' basic color='red' pointing='left'>
+        					Client
+      				</Label>
+    				</Button>}
+    			{this.props.state.client_user && this.props.state.login_user && this.state.clientRegister &&
+    				<ClientRegister/>}
+
+    			{this.props.state.org_user && this.props.state.login_user && this.state.Org_userRegister &&
+    				<Org_userRegister/>}
     			</Grid.Column>
   			</Grid>
+  			{/*{this.props.state.org_user && this.props.state.login_button && <Org_userRegister state={this.state.props}/>}*/}
 
  		 	</>
 

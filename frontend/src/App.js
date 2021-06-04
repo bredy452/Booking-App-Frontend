@@ -7,6 +7,8 @@ import Login from './Components/Login'
 import Homepage from './Components/Homepage'
 import ClientPage from './Components/ClientPage'
 import Bookings from './Components/Bookings'
+import ClientRegister from './Components/ClientRegister'
+import Org_userRegister from './Components/Org_userRegister'
 
 // import invert from 'lodash.invert'
 let baseUrl = ''
@@ -43,7 +45,18 @@ export default class App extends Component{
       return res.json()
     }).then(data => {
 
+      if (data.message === "Schedule does not exist") {
+        this.setState({
+          // availability: [],
+          post_button: true
+        })
+        return
+      } else {
+
       let arr = []
+      this.setState({
+        post_button: false
+      })
         arr = data.data.availability.split(',')
         let newArr = []
         let masterArr = []
@@ -72,7 +85,8 @@ export default class App extends Component{
         this.setState({
           availability: masterArr
           
-        })       
+        }) 
+        }      
     })
   }
 
@@ -82,6 +96,10 @@ export default class App extends Component{
     .then(res => {
       return res.json()
     }).then(data => {
+
+      if (data.message === "Schedule does not exist") {
+        return
+      } else {
 
       let arr = []
         arr = data.data.client_availability.split(',')
@@ -125,74 +143,10 @@ export default class App extends Component{
       console.log(this.state.availability)
       console.log(this.state.availability.length)
       console.log(this.state)
-      // if (this.state.availability.length === 0){
-      //   console.log(true)
-      // }
-
-        // console.log(masterArr)
-        // this.setState({
-        //   availability: masterArr
-          
-        // })       
+    }
+    
     })
   }
-
-  // getPotentialClientSchedule = (e) => {
-  //   fetch(baseUrl + `/schedules/client_schedule/${this.state.current_user.org_name}`, {
-  //     credentials: 'include'})
-  //   .then(res => {
-  //     return res.json()
-  //   }).then(data => {
-  //     let arr = []
-  //     arr = data.data.client_availability.split(',')
-  //     console.log ('HERE', arr)
-  //     let newArr = []
-  //     let masterArr = []
-  //     // let tempObj ={}
-
-
-  //     for(let j = 0; j < arr.length; j += 6){
-  //         let bitArr = arr.slice(j, j + 6)
-  //         newArr.push(bitArr)  
-  //     }
-
-  //       console.log(newArr)
-
-  //     for(let x = 0; x < newArr.length; x++){
-  //         let chunk = newArr[x]
-  //         let tempoObj ={}
-  //         console.log(chunk)  
-  //         for(let y = 0; y < chunk.length; y++) {
-  //             if (y % 2 === 0){
-  //               let key = chunk[y]
-  //               let value = chunk[y+1]
-  //               tempoObj[key] = value
-  //             }
-  //         }
-
-  //         masterArr.push(tempoObj)
-  //         console.log(masterArr)
-  //           // console.log(masterArr)
-  //     }
-
-  //     const copyAvailability = [...this.state.availability]
-  //     copyAvailability.push(tempoObj)
-  //       // console.log(masterArr)
-  //     this.setState({
-  //       availability: copyAvailability,
-  //       client_info: [data.data.client_id]
-  //     })
-  //     console.log(this.state.availability)
-  //     console.log(this.state.availability.length)
-  //     console.log(this.state)
-  //     // if (this.state.availability.length === 0){
-  //     //   console.log(true)
-  //     }
-
-  //   })
-
-
-  // }
 
   org_Login = (e) => {
     e.preventDefault();
@@ -213,7 +167,6 @@ export default class App extends Component{
         current_user: user,
         isLogin: !this.state.isLogin,
         login_button: !this.state.login_button,
-        post_button: false
       })
       //What can we check to confirm schedule
       
@@ -254,6 +207,7 @@ export default class App extends Component{
 
     
     console.log(this.state.availability)
+    console.log(this.state.current_user.id)
     
   
   }
@@ -300,6 +254,78 @@ export default class App extends Component{
     console.log(together)
   }
 
+  updateSchedule = (e) => {
+    e.preventDefault()
+    let separateFromObject = []
+    let string = []
+    let together = ''
+
+    this.state.availability.forEach(item => {
+      separateFromObject.push(Object.entries(item))
+    })
+    console.log(separateFromObject)
+    separateFromObject.forEach(data => {
+      string.push(data.toString())
+      together = string.join()
+    })
+    console.log(together)
+    fetch(baseUrl + `/schedules/org_user/editSchedule/${this.state.current_user.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        availability: together
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    }).then (res =>{
+        return res.json()
+    }).then(data => {
+      console.log(data)
+      // this.getOrgSchedule()
+      // let arr = []
+      //   arr = data.data.availability.split(',')
+      //   let newArr = []
+      //   let masterArr = []
+      //   const copyAvailability = [...this.state.availability]
+
+      //   for(let j = 0; j < arr.length; j += 6){
+      //       let bitArr = arr.slice(j, j + 6)
+      //       newArr.push(bitArr)
+      //   }
+      //   console.log(newArr)
+      //   for(let x = 0; x < newArr.length; x++){
+      //       let chunk = newArr[x]
+      //       let tempObj ={}
+      //       console.log(chunk)
+      //       for(let y = 0; y < chunk.length; y++) {
+      //           if (y % 2 === 0){
+      //             let key = chunk[y]
+      //             let value = chunk[y+1]
+      //             tempObj[key] = value
+      //           }
+      //       }
+      //     copyAvailability.push(tempObj)
+
+      //       // masterArr.push(tempObj)
+      //       // console.log(masterArr)
+      //   }
+
+      //   // const copyAvailability = [...this.state.availability]
+      //   // console.log(copyAvailability)
+        
+      
+      //   // console.log(masterArr)
+      // this.setState({
+      //   availability: copyAvailability
+      // })
+      // console.log(this.state.availability)
+      // console.log(this.state.availability.length)
+      // console.log(this.state)
+  
+    }).catch(error => console.error)
+  }
+
 
   render() {
     console.log(this.state.availability.length)
@@ -313,6 +339,9 @@ export default class App extends Component{
       {((this.state.org_user || this.state.client_user) && this.state.login_button) && <Login state={this.state} baseUrl={baseUrl} checkLogin={this.checkLogin}/>} 
 
       {(!this.state.org_user && !this.state.client_user) && <Homepage org_Login={this.org_Login} client_Login={this.client_Login}/>}
+
+      {this.state.client_user && this.state.login_button && <ClientRegister/>}
+      {this.state.org_user && this.state.login_button && <Org_userRegister/>}
 
 
       
@@ -330,12 +359,12 @@ export default class App extends Component{
       <button onClick={(e)=>{this.undoEntry(e)}}>Undo</button>
       }
 
-      {this.state.isLogin && this.state.org_user && this.state.post_button === false &&
+      {this.state.isLogin && this.state.org_user && this.state.post_button === true &&
       <button onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</button>
       }
 
-      {this.state.isLogin && this.state.org_user && this.state.post_button === true &&
-      <button>Update Schedule</button>}
+      {this.state.isLogin && this.state.org_user && this.state.post_button === false &&
+      <button onClick={(e)=>{this.updateSchedule(e)}}>Update Schedule</button>}
 
       {this.state.isLogin && this.state.client_user && <ClientPage baseUrl={baseUrl} state={this.state}/>}
       {this.state.isLogin && this.state.org_user && <Bookings clients={this.state.client_info}/>}
