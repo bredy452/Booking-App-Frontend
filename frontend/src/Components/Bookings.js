@@ -9,9 +9,9 @@ export default class Book extends Component {
 	render() {
 		return(
 			<>
-			{this.props.clients.map(item => {
+			{this.props.clients.map((item, color) => {
 				return(
-					<Table celled padded>
+					<Table color={'red'} celled padded>
     					<Table.Header>
      				 		<Table.Row key={item._id}>
         						<Table.HeaderCell singleLine>Client's First Name</Table.HeaderCell>

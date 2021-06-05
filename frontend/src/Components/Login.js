@@ -1,10 +1,7 @@
 import React, {Component} from 'react'
-import {Button, Form, Grid, Header, Segment, Label} from 'semantic-ui-react'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import InteractionPlugin from '@fullcalendar/interaction'
+import {Button, Form, Grid, Header, Segment, Label, Icon} from 'semantic-ui-react'
 import Org_userRegister from './Org_userRegister'
-import ClientRegister from './Org_userRegister'
+import ClientRegister from './ClientRegister'
 
 export default class Login extends Component {
 	constructor(props) {
@@ -68,13 +65,17 @@ export default class Login extends Component {
 
 	render() {
 		console.log(this.state.clientRegister)
-		console.log(this.state.org_userRegister)
+		// console.log(this.state.org_userRegister)
+		// console.log(this.props.state.client_user)
+		console.log(this.props.state.login_button)
 
 		return(
 			<>
 			<Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
     			<Grid.Column style={{ maxWidth: 450 }}>
-      				<Header as='h2' color='teal' textAlign='center'>
+      				<Header as='h2' color='Black'>
+      					<Icon name='calendar alternate outline'/>
+      					<Header.Content>Booking App</Header.Content>
     
      		 		</Header>
       				<Form size='large' onSubmit={ (e) => this.handleSubmit(e)}>
@@ -106,26 +107,25 @@ export default class Login extends Component {
       					</Label>
     					</Button>}
 
-    			{this.props.state.client_user && this.props.state.login_button && 
-    				<Button as='div' labelPosition='right'>
-      					<Button color='blue' onClick={(e) => {
-      						this.setState({clientRegister: !this.state.clientRegister})}}
-      					>
-        					Register
-      					</Button>
-      				<Label as='a' basic color='red' pointing='left'>
+    				{this.props.state.client_user && this.props.state.login_button && 
+    					<Button as='div' labelPosition='right'>
+      						<Button color='blue' onClick={(e) => {
+      							this.setState({clientRegister: !this.state.clientRegister})}}
+      						>
+        						Register
+      						</Button>
+      					<Label as='a' basic color='red' pointing='left'>
         					Client
-      				</Label>
-    				</Button>}
-    			{this.props.state.client_user && this.props.state.login_user && this.state.clientRegister &&
-    				<ClientRegister/>}
+      					</Label>
+    					</Button>}
+    				{this.state.clientRegister && this.props.state.login_button && 
+    					<ClientRegister clientRegister={this.state.clientRegister} baseUrl={this.props.baseUrl}/>}
 
-    			{this.props.state.org_user && this.props.state.login_user && this.state.Org_userRegister &&
-    				<Org_userRegister/>}
+    				{this.state.org_userRegister && this.props.state.login_button &&
+    					<Org_userRegister org_userRegister={this.state.org_userRegister} baseUrl={this.props.baseUrl}/>}
     			</Grid.Column>
   			</Grid>
-  			{/*{this.props.state.org_user && this.props.state.login_button && <Org_userRegister state={this.state.props}/>}*/}
-
+  			
  		 	</>
 
 

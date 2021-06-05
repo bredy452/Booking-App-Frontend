@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import InteractionPlugin from '@fullcalendar/interaction'
 import BookingCompanyChoice from './BookingCompanyChoice'
+import {Button} from 'semantic-ui-react'
 
 
 export default class ClientPage extends Component {
@@ -151,7 +152,7 @@ export default class ClientPage extends Component {
       		dateClick={(e) => {this.addBooking(e)}}
       		/>}
 
-      		{!this.state.noSchedule && <button onClick={(e)=>{this.submitSchedule(e)}}>Book Dates</button>}
+      		{!this.state.noSchedule && <Button secondary onClick={(e)=>{this.submitSchedule(e)}}>Book Dates</Button>}
 
 
           {this.state.noSchedule && <FullCalendar 

@@ -9,6 +9,10 @@ import ClientPage from './Components/ClientPage'
 import Bookings from './Components/Bookings'
 import ClientRegister from './Components/ClientRegister'
 import Org_userRegister from './Components/Org_userRegister'
+import Logout from './Components/Logout'
+import {Calendar} from '@fullcalendar/core'
+import bootstrapPlugin from '@fullcalendar/bootstrap'
+import {Button} from 'semantic-ui-react'
 
 // import invert from 'lodash.invert'
 let baseUrl = ''
@@ -131,11 +135,6 @@ export default class App extends Component{
             // console.log(masterArr)
         }
 
-        // const copyAvailability = [...this.state.availability]
-        // console.log(copyAvailability)
-        
-      
-        // console.log(masterArr)
       this.setState({
         availability: copyAvailability,
         client_info: [data.data.client_id]
@@ -282,89 +281,64 @@ export default class App extends Component{
         return res.json()
     }).then(data => {
       console.log(data)
-      // this.getOrgSchedule()
-      // let arr = []
-      //   arr = data.data.availability.split(',')
-      //   let newArr = []
-      //   let masterArr = []
-      //   const copyAvailability = [...this.state.availability]
-
-      //   for(let j = 0; j < arr.length; j += 6){
-      //       let bitArr = arr.slice(j, j + 6)
-      //       newArr.push(bitArr)
-      //   }
-      //   console.log(newArr)
-      //   for(let x = 0; x < newArr.length; x++){
-      //       let chunk = newArr[x]
-      //       let tempObj ={}
-      //       console.log(chunk)
-      //       for(let y = 0; y < chunk.length; y++) {
-      //           if (y % 2 === 0){
-      //             let key = chunk[y]
-      //             let value = chunk[y+1]
-      //             tempObj[key] = value
-      //           }
-      //       }
-      //     copyAvailability.push(tempObj)
-
-      //       // masterArr.push(tempObj)
-      //       // console.log(masterArr)
-      //   }
-
-      //   // const copyAvailability = [...this.state.availability]
-      //   // console.log(copyAvailability)
-        
-      
-      //   // console.log(masterArr)
-      // this.setState({
-      //   availability: copyAvailability
-      // })
-      // console.log(this.state.availability)
-      // console.log(this.state.availability.length)
-      // console.log(this.state)
   
     }).catch(error => console.error)
   }
 
+  logout = (e) => {
+    fetch(baseUrl + '/users/logout', {
+      'credentials': 'include'})
+    .then(res => {
+      return res.json()
+    }).then(data => {
+      this.setState({
+        client_user: false,
+        org_user: false,
+        isLogin: false,
+        client_page: false,
+        login_button: true
+      })
+      console.log(data.message)
+      alert('You have successfully logged out')
+    })
+  }
+
 
   render() {
-    console.log(this.state.availability.length)
     console.log(this.state.availability)
-    console.log(this.state.post_button)
-    // console.log(this.state.org_user)
+    console.log(this.state.current_user.id)
     const data = this.state.availability
     
     return (
       <>
+       {this.state.isLogin && <Logout logout={this.logout}/>}
       {((this.state.org_user || this.state.client_user) && this.state.login_button) && <Login state={this.state} baseUrl={baseUrl} checkLogin={this.checkLogin}/>} 
 
       {(!this.state.org_user && !this.state.client_user) && <Homepage org_Login={this.org_Login} client_Login={this.client_Login}/>}
-
-      {this.state.client_user && this.state.login_button && <ClientRegister/>}
-      {this.state.org_user && this.state.login_button && <Org_userRegister/>}
 
 
       
       {this.state.isLogin && this.state.org_user && 
 
       <FullCalendar 
-      plugins={[dayGridPlugin, InteractionPlugin]} 
+      plugins={[dayGridPlugin, InteractionPlugin, bootstrapPlugin]} 
       intialView='dayGridMonth' 
       events={data}
       selectable='true'
+      themeSystem='bootstrap'
       dateClick={(e)=> this.handleDateClick(e)}/>}
 
 
       {this.state.isLogin && this.state.org_user && 
-      <button onClick={(e)=>{this.undoEntry(e)}}>Undo</button>
+      <Button onClick={(e)=>{this.undoEntry(e)}}>Undo</Button>
       }
 
       {this.state.isLogin && this.state.org_user && this.state.post_button === true &&
-      <button onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</button>
+      <Button primary onClick={(e)=>{this.submitSchedule(e)}}>Post Schedule</Button>
       }
 
       {this.state.isLogin && this.state.org_user && this.state.post_button === false &&
-      <button onClick={(e)=>{this.updateSchedule(e)}}>Update Schedule</button>}
+      <Button primary onClick={(e)=>{this.updateSchedule(e)}}>Update Schedule</Button>}
 
       {this.state.isLogin && this.state.client_user && <ClientPage baseUrl={baseUrl} state={this.state}/>}
       {this.state.isLogin && this.state.org_user && <Bookings clients={this.state.client_info}/>}

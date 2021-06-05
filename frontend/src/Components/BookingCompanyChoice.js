@@ -174,7 +174,7 @@ export default class BookingCompanyChoice extends Component {
     			// value={this.state.companyChoice}
   			/>
 
-  			<Button schedule onClick={(e) => {this.getSchedule(e)}}>View Availability</Button>
+  			<Button primary schedule onClick={(e) => {this.getSchedule(e)}}>View Availability</Button>
 
   			</>
 		)

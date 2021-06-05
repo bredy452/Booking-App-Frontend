@@ -1,18 +1,53 @@
 import React, { Component } from 'react'
-import {Divider, Grid, Image, Segment} from 'semantic-ui-react'
+import {Menu, Header} from 'semantic-ui-react'
 
 export default class HomePage extends Component {
 	constructor(props) {
 		super(props)
-		this.state = {
-			
-		}
+		this.state = {}
+	}
+
+	handleItemClick1 = (e, {name}) => {
+		this.setState({
+			activeItem: name
+		})
+		this.props.org_Login(e)
+	}
+
+	handleItemClick2 = (e, {name}) => {
+			this.setState({
+				activeItem: name
+			})
+			this.props.client_Login(e)
 	}
 
 	render() {
+		const {activeItem} = this.state
+
 		return(
 			<>
-				<h1>Welcome to Booking</h1>
+				<Header as='h1' color='blue' textAlign='center'>
+      		Welcome to Booking
+   		 	</Header>
+				<Menu fluid widths={2}>
+					<Menu.Item
+					name='Organization Login'
+					active={activeItem === 'Organization Login'}
+					onClick={this.handleItemClick1}
+					>
+					Organization Login
+					</Menu.Item>
+
+					<Menu.Item
+					name='Client Login'
+					active={activeItem === 'Client Login'}
+					onClick={this.handleItemClick2}
+					>
+					Client Login
+					</Menu.Item>
+				</Menu>
+
+					{/*<
 				<Segment>
     <Grid columns={2} relaxed='very'>
       <Grid.Column>
@@ -28,7 +63,7 @@ export default class HomePage extends Component {
     </Grid>
 
     <Divider vertical></Divider>
-  </Segment>
+  </Segment>*/}
 				
 				
 			</>
