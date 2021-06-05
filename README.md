@@ -5,11 +5,15 @@ Project Description:
 
 User Stories
 	Owner can register and login
+	
 	Owner can input availability days into a calendar
+	
 	Owner can view booked days with the contact information of whomever booked
 
 	Client will be able to book an available day
+	
 	Client will be able to input post their contact information
+	
 	Client will be able to edit booking dates
 
 Stretch Goals
