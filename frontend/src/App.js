@@ -20,7 +20,7 @@ let baseUrl = ''
 if (process.env.NODE_ENV === 'development') {
   baseUrl= 'http://localhost:8000'
 } else {
-  baseUrl= process.env.REACT_APP_NODE_ENV
+  baseUrl= process.env.REACT_APP_BASEURL
 }
 
 export default class App extends Component{
