@@ -15,13 +15,13 @@ import bootstrapPlugin from '@fullcalendar/bootstrap'
 import {Button} from 'semantic-ui-react'
 
 // import invert from 'lodash.invert'
-let baseUrl = ''
+let baseUrl = process.env.REACT_APP_BASEURL
 
-if (process.env.NODE_ENV === 'development') {
-  baseUrl= 'http://localhost:8000'
-} else {
-  baseUrl= 'heroku url here'
-}
+// if (process.env.NODE_ENV === 'development') {
+//   baseUrl= 'http://localhost:8000'
+// } else {
+//   baseUrl= process.env.REACT_APP_NODE_ENV
+// }
 
 export default class App extends Component{
   constructor(props){
