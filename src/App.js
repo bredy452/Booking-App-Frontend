@@ -17,10 +17,17 @@ import {Button} from 'semantic-ui-react'
 // import invert from 'lodash.invert'
 let baseUrl = ''
 
+// if (process.env.NODE_ENV === 'development') {
+//   baseUrl= 'http://localhost:8000'
+// } else {
+//   baseUrl= process.env.REACT_APP_BASEURL
+// }
 if (process.env.NODE_ENV === 'development') {
   baseUrl= 'http://localhost:8000'
-} else {
-  baseUrl= process.env.REACT_APP_BASEURL
+}
+
+if (process.env.NODE_ENV === 'production') {
+  baseUrl= 'http://localhost:8000'
 }
 
 export default class App extends Component{
