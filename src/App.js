@@ -17,11 +17,11 @@ import {Button} from 'semantic-ui-react'
 // import invert from 'lodash.invert'
 let baseUrl = process.env.REACT_APP_BASEURL
 
-// if (process.env.NODE_ENV === 'development') {
-//   baseUrl= 'http://localhost:8000'
-// } else {
-//   baseUrl= process.env.REACT_APP_BASEURL
-// }
+if (process.env.NODE_ENV === 'development') {
+  baseUrl= 'http://localhost:8000'
+} else {
+  baseUrl= process.env.REACT_APP_BASEURL
+}
 
 export default class App extends Component{
   constructor(props){
@@ -83,9 +83,7 @@ export default class App extends Component{
           }
 
             masterArr.push(tempObj)
-            console.log(masterArr)
         }
-        // console.log(masterArr)
         this.setState({
           availability: masterArr
           
@@ -115,7 +113,7 @@ export default class App extends Component{
             let bitArr = arr.slice(j, j + 4)
             newArr.push(bitArr)
         }
-        console.log(newArr)
+    
         for(let x = 0; x < newArr.length; x++){
             let chunk = newArr[x]
             let tempObj ={}
@@ -130,18 +128,12 @@ export default class App extends Component{
 
           }
           copyAvailability.push(tempObj)
-
-            // masterArr.push(tempObj)
-            // console.log(masterArr)
         }
 
       this.setState({
         availability: copyAvailability,
         client_info: [data.data.client_id]
       })
-      console.log(this.state.availability)
-      console.log(this.state.availability.length)
-      console.log(this.state)
     }
     
     })
@@ -176,9 +168,6 @@ export default class App extends Component{
     if (this.state.org_user) {
       this.getOrgSchedule()
       this.getPotentialClientSchedule()
-      console.log(this.state.availability.length)
-
-
     }
 
    
@@ -192,7 +181,6 @@ export default class App extends Component{
     copyState.push(dupState)
 
     copyState.forEach((data) => {
-      // data.title = 'unavailable'
       if (data.title == undefined) {
         data.display = 'background'
         data.color = '#FF000D'
@@ -250,7 +238,6 @@ export default class App extends Component{
     }).then(data => {
       console.log(data)
     }).catch(error => console.error)
-    console.log(together)
   }
 
   updateSchedule = (e) => {
@@ -298,15 +285,12 @@ export default class App extends Component{
         client_page: false,
         login_button: true
       })
-      console.log(data.message)
       alert('You have successfully logged out')
     })
   }
 
 
   render() {
-    console.log(this.state.availability)
-    console.log(this.state.current_user.id)
     const data = this.state.availability
     
     return (
