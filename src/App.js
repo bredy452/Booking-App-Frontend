@@ -23,11 +23,11 @@ let baseUrl = ''
 //   baseUrl= process.env.REACT_APP_BASEURL
 // }
 if (process.env.NODE_ENV === 'development') {
-  baseUrl= 'http://localhost:8000'
+  baseUrl = 'http://localhost:8000'
 }
 
 if (process.env.NODE_ENV === 'production') {
-  baseUrl= 'http://localhost:8000'
+  baseUrl = process.env.REACT_APP_BASEURL
 }
 
 export default class App extends Component{
