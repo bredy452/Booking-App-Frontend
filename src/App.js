@@ -14,7 +14,6 @@ import {Calendar} from '@fullcalendar/core'
 import bootstrapPlugin from '@fullcalendar/bootstrap'
 import {Button} from 'semantic-ui-react'
 
-// import invert from 'lodash.invert'
 let baseUrl = process.env.REACT_APP_BASEURL
 
 if (process.env.NODE_ENV === 'development') {

@@ -22,6 +22,12 @@ export default class Login extends Component {
     };
   }
 
+  handleFlip = (e, flip) => {
+    this.setState({
+      clientRegister: flip,
+    });
+  };
+
   handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -149,6 +155,9 @@ export default class Login extends Component {
               <ClientRegister
                 clientRegister={this.state.clientRegister}
                 baseUrl={this.props.baseUrl}
+                handleFlip={(e) => {
+                  this.handleFlip(e);
+                }}
               />
             )}
 

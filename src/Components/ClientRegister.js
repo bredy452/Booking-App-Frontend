@@ -20,7 +20,7 @@ export default class ClientRegister extends Component {
     });
   };
 
-  register = (e) => {
+  register = (e, flip) => {
     e.preventDefault();
     fetch(this.props.baseUrl + "/users/client/register", {
       method: "POST",
@@ -41,7 +41,8 @@ export default class ClientRegister extends Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        this.props.handleFlip(flip);
+        console.log(data.message);
       })
       .catch((error) => console.error);
   };
@@ -51,7 +52,7 @@ export default class ClientRegister extends Component {
       <>
         <Form>
           <Form.Input
-            error={{
+        	error={{
               content: "Please enter your first name",
               pointing: "below",
             }}
@@ -122,7 +123,7 @@ export default class ClientRegister extends Component {
           <Button
             primary
             onClick={(e) => {
-              this.register(e);
+              this.register(e, !this.props.clientRegister);
             }}
           >
             Register
