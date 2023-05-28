@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Button, Icon, Label } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 
 export default class Org_userRegister extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ export default class Org_userRegister extends Component {
     });
   };
 
-  register = (e) => {
+  register = (e, flip) => {
     e.preventDefault();
     fetch(this.props.baseUrl + "/users/org_user/register", {
       method: "POST",
@@ -41,13 +41,13 @@ export default class Org_userRegister extends Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        this.props.handleFlipOrg(flip)
+        console.log(data.message);
       })
       .catch((error) => console.error);
   };
 
   render() {
-    console.log(this.state.org_name);
     return (
       <>
         <Form>
@@ -123,7 +123,7 @@ export default class Org_userRegister extends Component {
           <Button
             primary
             onClick={(e) => {
-              this.register(e);
+              this.register(e, !this.props.org_userRegister);
             }}
           >
             Register

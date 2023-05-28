@@ -22,9 +22,15 @@ export default class Login extends Component {
     };
   }
 
-  handleFlip = (e, flip) => {
+  handleFlipClient = (e, flip) => {
     this.setState({
       clientRegister: flip,
+    });
+  };
+
+  handleFlipOrg = (e, flip) => {
+    this.setState({
+      org_userRegister: flip,
     });
   };
 
@@ -126,7 +132,7 @@ export default class Login extends Component {
                     });
                   }}
                 >
-                  Register
+                  Click here to Register
                 </Button>
                 <Label as="a" basic color="red" pointing="left">
                   Organization
@@ -144,7 +150,7 @@ export default class Login extends Component {
                     });
                   }}
                 >
-                  Register
+                  Click here to Register
                 </Button>
                 <Label as="a" basic color="red" pointing="left">
                   Client
@@ -155,8 +161,8 @@ export default class Login extends Component {
               <ClientRegister
                 clientRegister={this.state.clientRegister}
                 baseUrl={this.props.baseUrl}
-                handleFlip={(e) => {
-                  this.handleFlip(e);
+                handleFlipClient={(e) => {
+                  this.handleFlipClient(e);
                 }}
               />
             )}
@@ -165,6 +171,9 @@ export default class Login extends Component {
               <Org_userRegister
                 org_userRegister={this.state.org_userRegister}
                 baseUrl={this.props.baseUrl}
+                handleFlipOrg={(e) => {
+                  this.handleFlipOrg(e);
+                }}
               />
             )}
           </Grid.Column>

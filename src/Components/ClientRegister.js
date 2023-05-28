@@ -41,7 +41,7 @@ export default class ClientRegister extends Component {
         return res.json();
       })
       .then((data) => {
-        this.props.handleFlip(flip);
+        this.props.handleFlipClient(flip);
         console.log(data.message);
       })
       .catch((error) => console.error);
@@ -52,7 +52,7 @@ export default class ClientRegister extends Component {
       <>
         <Form>
           <Form.Input
-        	error={{
+            error={{
               content: "Please enter your first name",
               pointing: "below",
             }}

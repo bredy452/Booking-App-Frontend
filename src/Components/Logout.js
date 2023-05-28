@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Icon, Reveal, Label } from "semantic-ui-react";
+import { Label } from "semantic-ui-react";
 
 export default class Logout extends Component {
   constructor(props) {
